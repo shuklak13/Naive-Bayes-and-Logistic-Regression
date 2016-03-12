@@ -1,0 +1,6 @@
+We are using the formula in NBayesLogRes(1).pdf
+
+Equation 26 for regularization (page 13)
+	USe equation 25 to find P(Y = 1 | X)
+
+If I want to see my results on the ML test, I have to let her know at least 24 hrs in advance and come to office hrs
