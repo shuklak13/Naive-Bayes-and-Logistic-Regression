@@ -47,7 +47,7 @@ class NBclassifier:
 		# print self.conditionalProbability["spam"]["convolute"]
 		# print self.conditionalProbability["spam"]["osire"]
 		# print "\nHam:"
-		self.conditionalProbability["ham"] = self.calculateConditionalProbability(hamWords)
+		self.conditionalProbability["ham"] = self.calculateConditionalProbability(hamText)
 		# print self.conditionalProbability["ham"]["ect"]
 		# print self.conditionalProbability["ham"]["enron"]
 		# print self.conditionalProbability["ham"]["subject"]
