@@ -1,9 +1,3 @@
-#Do I need to keep track of how many times each term is being used in each category?
-#I'm not, but elearning guy is.
-#check the notes
-
-#Is my int-float type conversions wrong somewhere? That may be the reason why my accuracies are so bad.
-
 from math import log
 from copy import deepcopy
 
@@ -29,10 +23,10 @@ class NBclassifier:
 		#conditionalProbability	dictionary of keys "spam" and "ham"
 			#values are dictionaries with keys=term, value=conditional probability of term
 
-	def __init__(self, spamText, hamWords, numSpamDocs, numHamDocs):
-		self.train(spamText, hamWords, numSpamDocs, numHamDocs)
+	def __init__(self, spamText, hamText, numSpamDocs, numHamDocs):
+		self.train(spamText, hamText, numSpamDocs, numHamDocs)
 
-	def train(self, spamText, hamWords, numSpamDocs, numHamDocs):
+	def train(self, spamText, hamText, numSpamDocs, numHamDocs):
 		self.prior = dict()
 		self.prior["spam"] = float(numSpamDocs) / float(numSpamDocs + numHamDocs)
 		self.prior["ham"] = float(numHamDocs) / float(numSpamDocs + numHamDocs)
@@ -40,7 +34,7 @@ class NBclassifier:
 
 		#terms are unique, text is not
 		text = deepcopy(spamText)
-		text.extend(hamWords)
+		text.extend(hamText)
 		self.terms = unique(text)
 		#print self.terms
 

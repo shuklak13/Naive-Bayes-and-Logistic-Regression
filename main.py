@@ -16,7 +16,8 @@ def filterStopwords(words):
 			filteredWords.append(word)
 	return filteredWords
 
-def filterNonAlphabetic(words):
+#filters nonalphabetic characters and lowercases everything
+def format(words):
 	filteredWords = []
 	regex = re.compile('[^a-zA-Z]')
 	for word in words:
@@ -28,7 +29,7 @@ def filterNonAlphabetic(words):
 def extractWordsFromFile(file, filter):
 	words = []
 	for line in file:
-		newWords = filterNonAlphabetic(line.split())
+		newWords = format(line.split())
 		if filter:
 			newWords = filterStopwords(newWords)
 		words.extend(newWords)
@@ -39,9 +40,7 @@ def getWordsFromFolder(folder, filter):
 	for file in os.listdir(os.getcwd() + folder):
 		fileWords = extractWordsFromFile(open(os.getcwd() + folder + "\\" + file, "r"), filter)
 		words.extend(fileWords)
-
 	#print "Num " + folder + " words: " + str(len(list(set(words))))
-
 	return words
 
 def countDocsInFolder(folder):
@@ -76,7 +75,7 @@ def reportClassifierAccuracies(filter):
 	numHamDocs = countDocsInFolder(hamFolderTrain)
 
 	nb = NBclassifier(spamWords, hamWords, numSpamDocs, numHamDocs)
-	#lr = LRclassifier(spamWords, hamWords)
+	lr05 = LRclassifier(spamWords, hamWords, spamFolderTrain, hamFolderTrain, 0.05)
 
 	if filter:
 		print "Accuracy with Stopword Fitlering"
@@ -86,7 +85,7 @@ def reportClassifierAccuracies(filter):
 	spamFolderTest = "\\test\\spam"
 	hamFolderTest = "\\test\\ham"
 	print(accuracy(nb, spamFolderTest, hamFolderTest, filter))
-	#print(accuracy(lr, spamFolderTest, hamFolderTest, filter))
+	print(accuracy(lr, spamFolderTest, hamFolderTest, filter))
 
 ###############################################################################
 
