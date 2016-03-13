@@ -62,7 +62,6 @@ def accuracy(classifier, spamTestFolder, hamTestFolder, filter):
 	numberOf["Total"] = 0
 	numberOf = test(numberOf, classifier, spamTestFolder, "spam")
 	numberOf = test(numberOf, classifier, hamTestFolder, "ham")
-	#print numberOf
 	return float(numberOf["Correct"]) / float(numberOf["Total"])
 
 def reportClassifierAccuracies(filter):
@@ -75,7 +74,7 @@ def reportClassifierAccuracies(filter):
 	numHamDocs = countDocsInFolder(hamFolderTrain)
 
 	#nb = NBclassifier(spamWords, hamWords, numSpamDocs, numHamDocs)
-	lr05 = LRclassifier(spamWords, hamWords, spamFolderTrain, hamFolderTrain, 0.05)
+	lr01 = LRclassifier(spamWords, hamWords, spamFolderTrain, hamFolderTrain, 0.01)
 
 	if filter:
 		print "Accuracy with Stopword Fitlering"

@@ -1,0 +1,14 @@
+Naive Bayes Accuracy:
+	With stopwords: 
+	Without stopwords: 
+
+Logistic Regression Accuracy:
+	With stopwords: 
+	Without stopwords: 
+
+My accuracies did not improve with stopword filtering. I believe that the lack of improvement indicates that stopwords have very little impact on a classifier's decision. Because stopwords are extremely common in both spam and ham files, their presence does not have significant influence even when they are not filtered out.
+
+Values chosen for logistic regression:
+	λ (Regularization Parameter) 	= 0.01, 0.05, 0.1
+	Number of Iterations 			= 50
+	Step Size (Learning Rate) 		= 0.05
