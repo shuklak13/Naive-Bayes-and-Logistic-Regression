@@ -50,7 +50,6 @@ def test(numberOf, classifier, testFolder, correctClass):
 	for file in os.listdir(os.getcwd() + testFolder):
 		fileText = extractWordsFromFile(file, filter)
 		classification = classifier.classify(fileText)
-		#print str(classification) + str(correctClass)
 		if classification == correctClass:
 			numberOf["Correct"] = numberOf["Correct"] + 1
 		numberOf["Total"] = numberOf["Total"] + 1
@@ -73,18 +72,37 @@ def reportClassifierAccuracies(filter):
 	hamWords = getWordsFromFolder(hamFolderTrain, filter)
 	numHamDocs = countDocsInFolder(hamFolderTrain)
 
-	#nb = NBclassifier(spamWords, hamWords, numSpamDocs, numHamDocs)
-	lr01 = LRclassifier(spamWords, hamWords, spamFolderTrain, hamFolderTrain, 0.01)
-
-	if filter:
-		print "Accuracy with Stopword Fitlering"
-	else:
-		print "Accuracy without Stopword Filtering"
-
 	spamFolderTest = "\\test\\spam"
 	hamFolderTest = "\\test\\ham"
-	#print(accuracy(nb, spamFolderTest, hamFolderTest, filter))
-	print(accuracy(lr01, spamFolderTest, hamFolderTest, filter))
+
+	if filter:
+		outputFile = open("accuraciesWOstopwords.txt", "a")
+	else:
+		outputFile = open("accuraciesWstopwords.txt", "a")
+
+	if filter:
+		print "Accuracy with Stopword Filtering"
+	else:
+		print "Accuracy without Stopword Filtering"
+	nb = NBclassifier(spamWords, hamWords, numSpamDocs, numHamDocs)
+	accNB = accuracy(nb, spamFolderTest, hamFolderTest, filter)
+	print accNB
+	outputFile.write("\naccNB " + str(accNB))
+
+	lr01 = LRclassifier(spamWords, hamWords, spamFolderTrain, hamFolderTrain, 0.01)
+	acc01 = accuracy(lr01, spamFolderTest, hamFolderTest, filter)
+	print acc01
+	outputFile.write("\nacc01 " + str(acc01))
+
+	lr50 = LRclassifier(spamWords, hamWords, spamFolderTrain, hamFolderTrain, 0.50)
+	acc50 = accuracy(lr50, spamFolderTest, hamFolderTest, filter)
+	print acc50
+	outputFile.write("\nacc50 " + str(acc50))
+
+	lr10 = LRclassifier(spamWords, hamWords, spamFolderTrain, hamFolderTrain, 0.10)
+	acc10 = accuracy(lr10, spamFolderTest, hamFolderTest, filter)
+	print acc10
+	outputFile.write("\nacc10 " + str(acc10))
 
 ###############################################################################
 
