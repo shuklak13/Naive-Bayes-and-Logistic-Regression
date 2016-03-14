@@ -79,6 +79,7 @@ def reportClassifierAccuracies(filter):
 		outputFile = open("accuraciesWOstopwords.txt", "a")
 	else:
 		outputFile = open("accuraciesWstopwords.txt", "a")
+	outputFile.write("\n----------------------------------------")
 
 	if filter:
 		print "Accuracy with Stopword Filtering"

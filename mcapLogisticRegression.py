@@ -34,7 +34,7 @@ def extractWordsFromFile(file):
 
 
 class LRclassifier:
-	learningRate = 0.1
+	learningRate = 0.2	#earlier was 0.05 but I changed it so we can see a larger difference in each step
 	features = []	#words in our text
 	weights = []	#weights for each feature - default to 1.0
 
@@ -55,10 +55,9 @@ class LRclassifier:
 		self.gradientAscent(numIterations, spamFolder, "spam", regularizationParameter)
 		self.gradientAscent(numIterations, hamFolder, "ham", regularizationParameter)
 
-		outputFile = open("weights.txt", "w")
+		outputFile = open("weights" + str(regularizationParameter) + ".txt", "w")
 		for w in range(0, self.numFeatures):
 			outputFile.write("\n"+self.features[w] + ": " + str(self.weights[w]))
-		print "finished training for regularizationParameter " + str(regularizationParameter)
 
 	def gradientAscent(self, numIterations, folder, category, regularizationParameter):
 		#X is a list containing Xl
