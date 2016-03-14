@@ -1,5 +1,7 @@
 #highly inefficient! Too much looping! Store more information in the program
 
+	#One iteration: start 10:14
+
 from sys import maxint
 import os
 import re #regex - used to remove non-alphabetic characters
@@ -31,7 +33,6 @@ def extractWordsFromFile(file):
 
 
 class LRclassifier:
-
 	learningRate = 0.05
 	features = []	#words in our text
 	weights = []	#weights for each feature - default to 1.0
@@ -48,71 +49,73 @@ class LRclassifier:
 		for i in range(self.numFeatures+1):
 			self.weights.append(1.0)
 
-		numIterations = 50 #abstractly chosen
+		#numIterations = 50 #abstractly chosen
+		numIterations = 1
 
 		self.gradientAscent(numIterations, spamFolder, "spam", regularizationParameter)
 		self.gradientAscent(numIterations, hamFolder, "ham", regularizationParameter)
 
 		outputFile = open("weights.txt", "w")
-		for w in range(0, numFeatures):
-			outputFile.write(self.features[w] + ": " + self.weights[w])
+		for w in range(0, self.numFeatures):
+			outputFile.write("\n"+self.features[w] + ": " + str(self.weights[w]))
+		print "finished training!"
 
 	def gradientAscent(self, numIterations, folder, category, regularizationParameter):
-
-		#Xs is a list containing a list for each file
-			#each sublist containing the number of occurances of each feature in that file
-		Xs = []
+		#X is a list containing Xl
+			#Xl is a list containing the number of occurances of each feature in document l
+				#So Xl[i] is the # of occurances of feature i in document l
+				
+		X = []
 		for file in os.listdir(os.getcwd() + folder):
-			#print "Extracting text from file..."
 			fileText = extractWordsFromFile(open(os.getcwd() + folder + "\\" + file, "r"))
-			#print "Finding number of each feature in file"
-			Xs.append(self.numOfEachFeatureInDocument(fileText))
-		#print "Completed creating X's!"
+			X.append(self.numOfEachFeatureInDocument(fileText))
+
+		if category is "spam":
+			y = 0.0
+		elif category is "ham":
+			y = 1.0
 
 		for iteration in range(numIterations):	#update each weight 100 times
 			print "iteration " + str(iteration) + " out of " + str(numIterations)
 			for i in range(1, self.numFeatures):
 				print "updating weight " + str(i)
-				self.updatewi(Xs, i, folder, category, regularizationParameter)
+				self.updatewi(y, X, i, folder, category, regularizationParameter)
 
-	def updatewi(self, Xs, i, folder, category, regularizationParameter):
-		if category is "spam":
-			y = 1.0
-		elif category is "ham":
-			y = 0.0
+	def updatewi(self, y, X, i, regularizationParameter):
 
 		regularizationTerm = self.learningRate * regularizationParameter * self.weights[i]
 
 		#calculate sumDifference
 		sumDifference = 0.0
-		for X in Xs:
-			difference = y - self.calculateProbabilitySpam(X)
-			sumDifference = sumDifference + X[i] * difference
+		for Xl in X:
+			if(Xl[i] is not 0):
+				difference = y - self.calculateProbabilitySpam(Xl)
+				sumDifference = sumDifference + Xl[i] * difference
 
 		self.weights[i] = self.weights[i] + self.learningRate * sumDifference - regularizationTerm
 
 	def numOfEachFeatureInDocument(self, fileText):
-		X = [0.0]
+		Xl = [0.0]
 		for i in range(1, self.numFeatures):
 			#print str(len(self.features)) + " " + str(self.numFeatures) + " " + str(i)
-			X.append(countTokensOfTerm(fileText, self.features[i]))
-		return X
+			Xl.append(countTokensOfTerm(fileText, self.features[i]))
+		return Xl
 
-	def calculateProbabilitySpam(self, X):
-		sumwiXi = 0.0
+	def calculateProbabilitySpam(self, Xl):
+		sumwiXli = 0.0
 		for i in range(1, self.numFeatures):
-			sumwiXi = sumwiXi + float(self.weights[i] * X[i])
-		#print "\n" + str(self.weights[0] + sumwiXi)
-		#print exp(self.weights[0] + sumwiXi)
-		#print 1.0 / (1 + exp(self.weights[0] + sumwiXi))
+			sumwiXli = sumwiXli + self.weights[i] * Xl[i]
 		try:
-			return 1.0 / (1 + exp(self.weights[0] + sumwiXi))
+			denominator = 1 + exp(self.weights[0] + sumwiXli)
 		except OverflowError:
-			return 1.0 / maxint
+			denominator = maxint
+		return 1.0 / denominator
 
 	#document should be a list of words
 	def classify(self, document):
-		if self.calculateProbabilitySpam(document) > 0.5:
+		Xl = self.numOfEachFeatureInDocument(document)
+
+		if self.calculateProbabilitySpam(Xl) > 0.5:
 			return "spam"
 		else:
 			return "ham"

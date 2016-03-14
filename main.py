@@ -84,7 +84,7 @@ def reportClassifierAccuracies(filter):
 	spamFolderTest = "\\test\\spam"
 	hamFolderTest = "\\test\\ham"
 	#print(accuracy(nb, spamFolderTest, hamFolderTest, filter))
-	print(accuracy(lr, spamFolderTest, hamFolderTest, filter))
+	print(accuracy(lr01, spamFolderTest, hamFolderTest, filter))
 
 ###############################################################################
 
